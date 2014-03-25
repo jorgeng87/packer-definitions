@@ -1,0 +1,79 @@
+{
+  "variables": {
+    "ssh_port" : "",
+    "hostname" : "",
+    "digital_ocean_client_id" : "{{ env `DIGITAL_OCEAN_CLIENT_ID`}}",
+    "digital_ocean_api_key" : "{{ env `DIGITAL_OCEAN_API_KEY` }}"
+  },
+  "builders": [{
+    "vm_name": "debian74wheezy.x64",
+    "name": "debian74wheezy.x64.virtualbox",
+    "type": "virtualbox-iso",
+    "guest_os_type": "Debian_64",
+    "iso_url": "http://cdimage.debian.org/debian-cd/7.4.0/amd64/iso-cd/debian-7.4.0-amd64-netinst.iso",
+    "iso_checksum": "e7e9433973f082a297793c3c5010b2c5",
+    "iso_checksum_type": "md5",
+    "guest_additions_mode": "disable",
+    "ssh_username": "vagrant",
+    "ssh_password": "vagrant",
+    "ssh_wait_timeout": "10000s",
+    "shutdown_command": "echo 'vagrant' | sudo -S shutdown -h now",
+    "http_directory": "http",
+    "boot_command": [
+        "<esc><wait>",
+        "install ",
+        "auto ",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+        "debian-installer=en_US ",
+        "locale=en_US ",
+        "keymap=us ",
+        "netcfg/get_hostname={{ .Name }} ",
+        "netcfg/get_domain=vagrantup.com ",
+        "<enter>"
+      ],
+    "vboxmanage": [
+       ["modifyvm", "{{.Name}}", "--memory", "1024"],
+       ["modifyvm", "{{.Name}}", "--cpus", "2"]
+     ]
+  },
+  {
+    "type": "digitalocean",
+    "name": "debian70wheezy.x64.digitalocean",
+    "client_id": "{{ user `digital_ocean_client_id` }}",
+    "api_key": "{{ user `digital_ocean_api_key` }}",
+    "image_id": "308287",
+    "region_id": "5",
+    "size_id": "66",
+    "private_networking": "false",
+    "droplet_name": "{{ user `hostname` }}",
+    "ssh_port": "{{ user `ssh_port` }}"
+  }
+  ],
+  "provisioners": [
+    {
+      "override" : {
+        "debian70wheezy.x64.digitalocean": {
+          "scripts": [
+            "scripts/base.sh",
+            "scripts/ruby.sh",
+            "scripts/puppet.sh"
+          ]
+        },
+        "debian74wheezy.x64.virtualbox": {
+          "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+          "scripts": [
+            "scripts/base.sh",
+            "scripts/ruby.sh",
+            "scripts/vagrant_ssh.sh",
+            "scripts/puppet.sh"
+          ]
+        }
+      },
+      "type": "shell"
+    }
+  ],
+  "post-processors": [ {
+    "type" : "vagrant",
+    "only" : ["debian74wheezy.x64.virtualbox"]
+  } ]
+}
