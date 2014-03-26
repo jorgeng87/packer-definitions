@@ -13,7 +13,7 @@ This will create a Droplet running Debian 7.0 Wheezy x64 on the smallest Droplet
 
 #API keys
 
-The API keys for the different services are stored on environment variables and referred from the packer definition. Check the "variables" section (top of the file).
+The API keys for the different services are stored on environment variables and referred from the packer definition. Check the **"variables"** section (top of the file).
 
 ```json
 "variables": {
