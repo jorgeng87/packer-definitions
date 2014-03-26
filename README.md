@@ -1,7 +1,7 @@
 Packer-definitions
 ==================
 
-A compilation of my packer definitions to create machine images for AWS, DigitalOcean, AWS, etc.
+A compilation of my packer definitions to create machine images for AWS, DigitalOcean, Virtualbox, etc.
 
 #Getting started
 
