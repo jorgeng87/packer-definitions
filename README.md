@@ -7,7 +7,12 @@ A compilation of my [packer.io](http://www.packer.io/) definitions to create mac
 
 To create a machine in DigitalOcean for example we can do
 
-```packer build -var "ssh_port=22" -var "hostname=AgileDataScience" -only "debian70wheezy.x64.digitalocean" debian7X.json```
+```bash
+packer build -var "ssh_port=22" -var "hostname=AgileDataScience" \ 
+             -var "manifest_file=./manifests/agile_data.pp" \ 
+             -var "module_paths=../modules-puppet" \
+             -only "debian70wheezy.x64.digitalocean" debian7X.json
+```
 
 This will create a Droplet running Debian 7.0 Wheezy x64 on the smallest Droplet size (512MB RAM, 1 CPU, 20GB disk size) on the Amsterdam 2 region. It will provision it with shell command to install everything needed for **Puppet**. Then it will provision the rest with **Puppet**.
 
