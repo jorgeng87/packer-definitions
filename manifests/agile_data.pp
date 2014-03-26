@@ -12,6 +12,12 @@ node default {
     subscribe => Package["python-pip"],
   }
 
+  # Install Avro for Python
+  exec { "pip install avro":
+    path      => ["/usr/bin"],
+    subscribe => Package["python-pip"],
+  }
+
   # Get the repo with the code
   vcsrepo { "/opt/agile_data_code":
     ensure   => present,
