@@ -3,7 +3,9 @@
     "ssh_port" : "",
     "hostname" : "",
     "digital_ocean_client_id" : "{{ env `DIGITAL_OCEAN_CLIENT_ID`}}",
-    "digital_ocean_api_key" : "{{ env `DIGITAL_OCEAN_API_KEY` }}"
+    "digital_ocean_api_key" : "{{ env `DIGITAL_OCEAN_API_KEY` }}",
+    "module_paths": "",
+    "manifest_file": ""
   },
   "builders": [{
     "vm_name": "debian74wheezy.x64",
@@ -70,6 +72,11 @@
         }
       },
       "type": "shell"
+    },
+    {
+      "type": "puppet-masterless",
+      "manifest_file": "{{ user `manifest_file` }}",
+      "module_paths": "{{ user `module_path` }}"
     }
   ],
   "post-processors": [ {
